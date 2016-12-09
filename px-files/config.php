@@ -200,6 +200,9 @@ return call_user_func( function(){
 	$conf->funcs->processor = new stdClass;
 
 	$conf->funcs->processor->html = array(
+		// NGワードを検索
+		'ykuro\contentsValidator\validator::exec' ,
+		
 		// ページ内目次を自動生成する
 		'picklesFramework2\processors\autoindex\autoindex::exec' ,
 
