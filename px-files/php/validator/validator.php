@@ -19,29 +19,75 @@ class validator{
         foreach( $px->bowl()->get_keys() as $key ){
             $src = $px->bowl()->pull( $key );
 
-            $patterns = array(
-            	array('/<div>(.*)<div>/s', 'divが2つ並んでいます'),
-            	array('/<span>(.*)<span>/s', 'spanが2つ並んでいます'),
-            );
+            $csv = $px->fs()->read_csv(__DIR__.'/test.csv');
 
-            // $patterns = array(
-            // 	 '/<div>(.*)<div>/s',
-            // 	 '/<span>(.*)<span>/s',
-            // );
+            /*$csv  = array();
+            $file = __DIR__.'/test.csv';
+            $fp   = fopen($file, "r");
+            var_dump( realpath('.'));
+            var_dump( realpath('test.csv'));
 
-            // $errormese = array(
-            // 	'divが2つ並んでいます',
-            // 	'spanが2つ並んでいます',
-            // );
+            var_dump(__DIR__);
+            var_dump(__FILE__);
 
-            foreach( $patterns as $key => $pattern) {
-            	if( preg_match($pattern[0], $src)){
-	            	//$px->error( htmlspecialchars("エラー${errormese[$key]}が発生しました！") );
-	            	$px->error( htmlspecialchars("エラー${pattern[1]}が発生しました！") );
-	            }
+            var_dump(__DIR__.'/test.csv');
+
+
+             
+            while (($data = fgetcsv($fp, 0, ",")) !== FALSE) {
+              $csv[] = $data;
             }
+            fclose($fp);*/
 
-            // $src = \Michelf\MarkdownExtra::defaultTransform($src);
+            var_dump($csv);
+
+
+            /*$filename = './test.csv';
+            if( ! file_exists( $filename ) ){
+                die("ファイルが存在しません。");
+            }*/
+
+            /*// 文字化け対策
+            // CSVファイルの中身をすべて取り出す
+            $tmpCSV = file_get_contents( $filename );
+            // 文字コードをUTF-8に変換
+            $tmpCSV = mb_convert_encoding( $tmpCSV, 'UTF-8', 'CP932' );
+            // 一時ファイルに保存
+            $fp = tmpfile();
+            fwrite( $fp, $tmpCSV );
+            // ファイルポインタを先頭に戻す
+            rewind( $fp );
+            // ロケールを設定
+            setlocale( LC_ALL, 'ja_JP, UTF-8' );
+
+            // 1行づつ読み込み
+            $lines = fgetcsv( $fp );
+            list( $keywords, $errormese ) = $lines;
+            $px->error( htmlspecialchars( "エラー${keywords}が発生しました！" ) );*/
+
+            /*while( $arr = fgetcsv( $fp ) ){
+                if( ! array_diff( $arr, array('') ) ){ // 空行を除外
+                    continue;
+                }
+                list( $keywords, $errormese ) = $arr;
+                $px->error( $arr[0] );
+                if( preg_match( $keywords, $src )){
+                    $px->error( htmlspecialchars( "エラー${errormese}が発生しました！" ) );
+                }
+            }*/
+
+            /*foreach ($lines as $key => $line) {
+                $errormese = explode(',', $line);
+                if( preg_match($errormese[0], $src)){
+                    $px->error( htmlspecialchars("エラー${errormese[1]}が発生しました！") );
+                }
+            }*/
+
+            /*//ファイルロックを解除
+            fflush( $fp );
+            flock( $fp, LOCK_UN) ;
+            //ファイルを閉じる
+            fclose( $fp );*/
 
             $px->bowl()->replace( $src, $key );
         }
