@@ -30,12 +30,17 @@ class validator{
             }
             fclose($fp);*/
 
-            //foreach ($csvs as $key => $csv) {
+            if( preg_match( '/[Ａ-Ｚ０-９]/', $src )){
+                $px->error( htmlspecialchars( "エラー全角英数字があります！" ) );
+            };
+
             foreach ($csvs as $csv) {
                 if( preg_match( '/'.preg_quote($csv[0]).'/', $src )){
                     $px->error( htmlspecialchars( "エラー${csv[1]}が発生しました！" ) );
                 };
             };
+
+
 
             $px->bowl()->replace( $src, $key );
         }
