@@ -19,24 +19,15 @@ class validator{
         foreach( $px->bowl()->get_keys() as $key ){
             $src = $px->bowl()->pull( $key );
 
-            $csvs = $px->fs()->read_csv(__DIR__.'/test.csv');
+            $csvs = $px->fs()->read_csv(__DIR__.'/for_validate.csv');
 
-            /*$csv  = array();
-            $file = __DIR__.'/test.csv';
-            $fp   = fopen($file, "r");
-
-            while (($data = fgetcsv($fp, 0, ",")) !== FALSE) {
-              $csv[] = $data;
-            }
-            fclose($fp);*/
-
-            if( preg_match( '/[Ａ-Ｚ０-９]/', $src )){
-                $px->error( htmlspecialchars( "エラー全角英数字があります！" ) );
-            };
+            /*if( preg_match( '/[Ａ-Ｚ０-９]/', $src )){
+                $px->error( htmlspecialchars( "全角英数字がありますが問題ありませんか？" ) );
+            };*/
 
             foreach ($csvs as $csv) {
                 if( preg_match( '/'.preg_quote($csv[0]).'/', $src )){
-                    $px->error( htmlspecialchars( "エラー${csv[1]}が発生しました！" ) );
+                    $px->error( htmlspecialchars( "validationERROR・${csv[1]}" ) );
                 };
             };
 
