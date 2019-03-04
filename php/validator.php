@@ -52,12 +52,12 @@ class validator{
 					$csvs = $this->px->fs()->read_csv( $csv_file_path );
 
 					/*if( preg_match( '/[Ａ-Ｚ０-９]/', $src )){
-						$this->px->error( htmlspecialchars( "全角英数字がありますが問題ありませんか？" ) );
+						$this->px->error( "全角英数字がありますが問題ありませんか？" );
 					};*/
 
 					foreach ($csvs as $csv) {
 						if( preg_match( '/'.preg_quote($csv[0]).'/', $src )){
-							$this->px->error( htmlspecialchars( "validationERROR・${csv[1]}" ) );
+							$this->px->error( "validationERROR・${csv[1]}" );
 						};
 					};
 
