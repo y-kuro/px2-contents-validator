@@ -36,12 +36,19 @@ class validator{
 	public function __construct( $px, $plugin_options ){
 		$this->px = $px;
 		$this->plugin_options = json_decode(json_encode($plugin_options), true);
+		if( !array_key_exists('rules', $this->plugin_options) ){
+			$this->plugin_options['rules'] = array();
+		}
+		if( !array_key_exists('csv', $this->plugin_options['rules']) ){
+			$this->plugin_options['rules']['csv'] = array();
+		}
 	}
 
 	/**
 	 * バリデーションを実行する
 	 */
 	private function validate(){
+		$validator_error_prefix = 'validationERROR';
 
 		foreach( $this->px->bowl()->get_keys() as $key ){
 			$src = $this->px->bowl()->pull( $key );
@@ -50,10 +57,6 @@ class validator{
 				foreach( $this->plugin_options['rules']['csv'] as $csv_file_path ){
 
 					$csv_rows = $this->px->fs()->read_csv( $csv_file_path );
-
-					/*if( preg_match( '/[Ａ-Ｚ０-９]/', $src )){
-						$this->px->error( "全角英数字がありますが問題ありませんか？" );
-					};*/
 
 					foreach ($csv_rows as $csv_row) {
 						$keyword = $csv_row[0];
@@ -66,12 +69,12 @@ class validator{
 						switch( $method ){
 							case 'contain':
 								if( !$preg_result ){
-									$this->px->error( "validationERROR: ".$error_msg );
+									$this->px->error( $validator_error_prefix.': '.$error_msg );
 								}
 								break;
 							case 'not_contain':
 								if( $preg_result ){
-									$this->px->error( "validationERROR: ".$error_msg );
+									$this->px->error( $validator_error_prefix.': '.$error_msg );
 								}
 								break;
 						}
