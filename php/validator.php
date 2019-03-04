@@ -10,32 +10,64 @@ namespace ykuro\contentsValidator;
  */
 class validator{
 
-    /**
-     * 変換処理の実行
-     * @param object $px Picklesオブジェクト
-     */
-    public static function exec( $px, $json ){
+	/** Pickles Object */
+	private $px;
 
-        foreach( $px->bowl()->get_keys() as $key ){
-            $src = $px->bowl()->pull( $key );
-
-            $csvs = $px->fs()->read_csv(__DIR__.'/for_validate.csv');
-
-            /*if( preg_match( '/[Ａ-Ｚ０-９]/', $src )){
-                $px->error( htmlspecialchars( "全角英数字がありますが問題ありませんか？" ) );
-            };*/
-
-            foreach ($csvs as $csv) {
-                if( preg_match( '/'.preg_quote($csv[0]).'/', $src )){
-                    $px->error( htmlspecialchars( "validationERROR・${csv[1]}" ) );
-                };
-            };
+	/** Plugin Options */
+	private $plugin_options;
 
 
+	/**
+	 * 変換処理の実行
+	 * @param object $px Picklesオブジェクト
+	 * @param object $plugin_options プラグイン設定
+	 */
+	public static function exec( $px, $plugin_options ){
+		$validator = new self($px, $plugin_options);
+		$validator->validate();
+		return true;
+	}
 
-            $px->bowl()->replace( $src, $key );
-        }
+	/**
+	 * Constructor
+	 * @param object $px Picklesオブジェクト
+	 * @param object $plugin_options プラグイン設定
+	 */
+	public function __construct( $px, $plugin_options ){
+		$this->px = $px;
+		$this->plugin_options = json_decode(json_encode($plugin_options), true);
+	}
 
-        return true;
-    }
+	/**
+	 * バリデーションを実行する
+	 */
+	private function validate(){
+
+		foreach( $this->px->bowl()->get_keys() as $key ){
+			$src = $this->px->bowl()->pull( $key );
+
+			if( is_array( $this->plugin_options['rules']['csv'] ) ){
+				foreach( $this->plugin_options['rules']['csv'] as $csv_file_path ){
+
+					$csvs = $this->px->fs()->read_csv( $csv_file_path );
+
+					/*if( preg_match( '/[Ａ-Ｚ０-９]/', $src )){
+						$this->px->error( htmlspecialchars( "全角英数字がありますが問題ありませんか？" ) );
+					};*/
+
+					foreach ($csvs as $csv) {
+						if( preg_match( '/'.preg_quote($csv[0]).'/', $src )){
+							$this->px->error( htmlspecialchars( "validationERROR・${csv[1]}" ) );
+						};
+					};
+
+				}
+			}
+
+			$this->px->bowl()->replace( $src, $key );
+		}
+
+		return true;
+	}
+
 }

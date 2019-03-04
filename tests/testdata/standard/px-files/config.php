@@ -200,9 +200,7 @@ return call_user_func( function(){
 	$conf->funcs->processor = new stdClass;
 
 	$conf->funcs->processor->html = array(
-		// NGワードを検索
-		'ykuro\contentsValidator\validator::exec' ,
-		
+
 		// ページ内目次を自動生成する
 		'picklesFramework2\processors\autoindex\autoindex::exec' ,
 
@@ -236,6 +234,17 @@ return call_user_func( function(){
 				'data-contents-area',
 			) ,
 		)).')' ,
+
+		// NGワードを検索
+		'ykuro\contentsValidator\validator::exec('.json_encode( array(
+			// バリデーション規則の定義
+			'rules' => array(
+				// CSVファイルで定義 (複数指定可)
+				'csv' => array(
+					'./px-files/validator/for_validate.csv',
+				),
+			),
+		) ).')' ,
 
 		// output_encoding, output_eol_coding の設定に従ってエンコード変換する。
 		'picklesFramework2\processors\encodingconverter\encodingconverter::exec' ,
