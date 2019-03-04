@@ -9,13 +9,19 @@
             "email": "y-kuronuma@imjp.co.jp"
         }
     ],
+    "scripts":{
+        "test": [
+            "php ./vendor/phpunit/phpunit/phpunit"
+        ]
+    } ,
     "repositories": [
     ],
     "require": {
         "php": ">=5.4.0"
     },
     "require-dev": {
-        "pickles2/px-fw-2.x": "dev-master",
+        "phpunit/phpunit": "^4.1.0" ,
+        "pickles2/px-fw-2.x": "dev-develop",
         "pickles2/broccoli-module-fess": "0.1.*",
         "pickles2/broccoli-module-plain-html-elements": "0.1.*",
         "pickles2/px2-dec": "2.0.*",
@@ -27,7 +33,7 @@
     },
     "autoload": {
         "files": [
-			"px-files/php/validator/validator.php"
+			"php/validator.php"
         ]
     }
 }
