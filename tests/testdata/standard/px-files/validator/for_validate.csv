@@ -1,1 +1,2 @@
-"comment_area_check","コメントが残っています。削除してください。"
+"comment_area_check","not_contain","コメント ""comment_area_check"" が残っています。削除してください。"
+"comment_area_check","contain","コメント ""comment_area_check"" が含まれていません。含めてください。"

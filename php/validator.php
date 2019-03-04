@@ -49,16 +49,32 @@ class validator{
 			if( is_array( $this->plugin_options['rules']['csv'] ) ){
 				foreach( $this->plugin_options['rules']['csv'] as $csv_file_path ){
 
-					$csvs = $this->px->fs()->read_csv( $csv_file_path );
+					$csv_rows = $this->px->fs()->read_csv( $csv_file_path );
 
 					/*if( preg_match( '/[Ａ-Ｚ０-９]/', $src )){
 						$this->px->error( "全角英数字がありますが問題ありませんか？" );
 					};*/
 
-					foreach ($csvs as $csv) {
-						if( preg_match( '/'.preg_quote($csv[0]).'/', $src )){
-							$this->px->error( "validationERROR・${csv[1]}" );
-						};
+					foreach ($csv_rows as $csv_row) {
+						$keyword = $csv_row[0];
+						$method = strtolower($csv_row[1]);
+						$error_msg = $csv_row[2];
+
+						if( !strlen($method) ){ $method = 'not_contain'; }
+
+						$preg_result = preg_match( '/'.preg_quote($keyword, '/').'/s', $src );
+						switch( $method ){
+							case 'contain':
+								if( !$preg_result ){
+									$this->px->error( "validationERROR: ".$error_msg );
+								}
+								break;
+							case 'not_contain':
+								if( $preg_result ){
+									$this->px->error( "validationERROR: ".$error_msg );
+								}
+								break;
+						}
 					};
 
 				}
